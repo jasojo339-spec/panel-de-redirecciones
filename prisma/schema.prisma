@@ -1,0 +1,46 @@
+// Schema de la base de datos — Prisma + SQLite
+// Comandos útiles:
+//   npx prisma migrate dev   -> crea/aplica migraciones (y regenera el cliente)
+//   npx prisma studio        -> abre la interfaz web para ver/editar los datos
+//   npm run seed             -> carga los datos de ejemplo
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Destinos a los que redirige el panel
+model Destino {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  url         String
+  descripcion String   @default("")
+  categoria   String   @default("Otros")
+  icono       String   @default("🔗")
+  color       String   @default("#38bdf8")
+  activo      Boolean  @default(true)
+  orden       Int      @default(0)
+  visitas     Int      @default(0)
+  creado      DateTime @default(now())
+  actualizado DateTime @updatedAt
+
+  @@index([categoria])
+}
+
+// Credenciales de acceso a cada servicio (se cargan después)
+model Credencial {
+  id        Int      @id @default(autoincrement())
+  servicio  String
+  usuario   String
+  password  String
+  url       String   @default("")
+  notas     String   @default("")
+  creado    DateTime @default(now())
+  actualizado DateTime @updatedAt
+
+  @@unique([servicio, usuario])
+}

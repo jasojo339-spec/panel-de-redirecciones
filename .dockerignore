@@ -1,0 +1,30 @@
+# Dependencias y artefactos de build (se generan dentro de la imagen)
+node_modules
+.next
+out
+build
+coverage
+
+# El Dockerfile no hace falta dentro de la imagen, y así un cambio en él
+# no invalida el `COPY . .` de la etapa de build (build mucho más rápido)
+Dockerfile
+.dockerignore
+
+# Base de datos local: dentro del contenedor se crea en /app/data
+prisma/dev.db
+prisma/dev.db-journal
+data
+
+# Secrets: dentro de la imagen se usan los ENV del Dockerfile
+.env
+.env.*
+
+# Varios
+*.log
+npm-debug.log*
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+index-panel-v1.html.bak
+.git
+.vscode
