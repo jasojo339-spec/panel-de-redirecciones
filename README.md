@@ -1,8 +1,5 @@
 # Panel de Redirecciones (Next.js + Prisma + SQLite)
 
-Aplicación web para redirigir a diferentes páginas, con una base de datos
-**SQLite** detrás y un panel de administración protegido por usuario y
-contraseña.
 
 ## Rutas
 
