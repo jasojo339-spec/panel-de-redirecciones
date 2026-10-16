@@ -108,6 +108,39 @@ export async function alternarDestino(formData: FormData): Promise<void> {
   refrescar();
 }
 
+// Editar un destino existente (va con useActionState, por eso recibe el estado previo)
+export async function actualizarDestino(
+  _prev: Resultado,
+  formData: FormData,
+): Promise<Resultado> {
+  await exigirAdmin();
+
+  const id = Number(formData.get("id"));
+  const nombre = texto(formData.get("nombre"));
+  const url = texto(formData.get("url"));
+
+  if (!Number.isInteger(id)) return { error: "ID inválido" };
+  if (!nombre || !url) return { error: "Nombre y URL son obligatorios" };
+
+  const existe = await prisma.destino.findUnique({ where: { id } });
+  if (!existe) return { error: "Ese destino ya no existe" };
+
+  await prisma.destino.update({
+    where: { id },
+    data: {
+      nombre,
+      url,
+      descripcion: texto(formData.get("descripcion")),
+      categoria: texto(formData.get("categoria")) || "Otros",
+      icono: texto(formData.get("icono")) || "🔗",
+      color: texto(formData.get("color")) || "#38bdf8",
+    },
+  });
+
+  refrescar();
+  return { ok: true };
+}
+
 /* --------------------- Credenciales ----------------------- */
 
 export async function guardarCredencial(

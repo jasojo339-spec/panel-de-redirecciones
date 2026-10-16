@@ -3,8 +3,10 @@ import { redirect } from "next/navigation";
 import { getUsuario } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { salir } from "@/app/actions";
-import AdminDestinos from "@/components/AdminDestinos";
-import AdminCredenciales from "@/components/AdminCredenciales";
+import AdminDestinos, { BotonAnadirDestino } from "@/components/AdminDestinos";
+import AdminCredenciales, {
+  BotonAnadirCredencial,
+} from "@/components/AdminCredenciales";
 
 export const metadata = { title: "Admin — Panel de Redirecciones" };
 
@@ -40,7 +42,9 @@ async function Contenido() {
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
+          <BotonAnadirDestino />
+          <BotonAnadirCredencial />
           <a
             href="/"
             className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-slate-300 hover:border-sky-400 hover:text-slate-100 transition"
