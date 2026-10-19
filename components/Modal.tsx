@@ -61,3 +61,49 @@ export const btnPrimario =
 
 export const btnSecundario =
   "flex-1 rounded-lg border border-slate-700 py-2.5 text-sm text-slate-300 transition hover:border-slate-500";
+
+// Fila-opción del menú de un modal de acciones
+export function Opcion({
+  icono,
+  titulo,
+  detalle,
+  onClick,
+  peligro = false,
+  disabled = false,
+}: {
+  icono: string;
+  titulo: string;
+  detalle: string;
+  onClick: () => void;
+  peligro?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex items-center gap-3 rounded-xl border px-3 py-3 text-left transition disabled:opacity-60 ${
+        peligro
+          ? "border-rose-400/30 bg-rose-400/5 hover:bg-rose-400/15 hover:border-rose-400/60"
+          : "border-slate-700 bg-slate-900/40 hover:border-sky-400 hover:bg-slate-900/80"
+      }`}
+    >
+      <span className="text-xl" aria-hidden="true">
+        {icono}
+      </span>
+      <span className="min-w-0">
+        <span
+          className={`block text-sm font-medium ${
+            peligro ? "text-rose-300" : "text-slate-100"
+          }`}
+        >
+          {titulo}
+        </span>
+        <span className="block text-xs text-slate-500">{detalle}</span>
+      </span>
+      <span className="ml-auto text-slate-600" aria-hidden="true">
+        ›
+      </span>
+    </button>
+  );
+}

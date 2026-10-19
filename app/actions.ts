@@ -188,6 +188,50 @@ export async function borrarCredencial(formData: FormData): Promise<void> {
   refrescar();
 }
 
+// Editar una credencial existente (por id, así no choca con la clave única
+// servicio+usuario si el usuario cambia alguno de los dos)
+export async function actualizarCredencial(
+  _prev: Resultado,
+  formData: FormData,
+): Promise<Resultado> {
+  await exigirAdmin();
+
+  const id = Number(formData.get("id"));
+  const servicio = texto(formData.get("servicio"));
+  const usuarioServicio = texto(formData.get("usuario"));
+  const password = texto(formData.get("password"));
+
+  if (!Number.isInteger(id)) return { error: "ID inválido" };
+  if (!servicio || !usuarioServicio) {
+    return { error: "Servicio y usuario son obligatorios" };
+  }
+
+  const existe = await prisma.credencial.findUnique({ where: { id } });
+  if (!existe) return { error: "Esa credencial ya no existe" };
+
+  const duplicada = await prisma.credencial.findFirst({
+    where: { servicio, usuario: usuarioServicio, NOT: { id } },
+  });
+  if (duplicada) {
+    return { error: "Ya existe otra credencial con ese servicio y usuario" };
+  }
+
+  await prisma.credencial.update({
+    where: { id },
+    data: {
+      servicio,
+      usuario: usuarioServicio,
+      // contraseña vacía = se mantiene la que ya tenía
+      ...(password ? { password } : {}),
+      url: texto(formData.get("url")),
+      notas: texto(formData.get("notas")),
+    },
+  });
+
+  refrescar();
+  return { ok: true };
+}
+
 /* ------------------------------------------------------------ */
 
 // Vuelve a generar las páginas para que se vean los cambios
