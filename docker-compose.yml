@@ -1,0 +1,40 @@
+# =====================================================================
+#  Panel de Redirecciones — Docker Compose
+#
+#  Arrancar:     docker compose up -d --build
+#  Ver logs:     docker compose logs -f
+#  Parar:        docker compose down       (los datos siguen en ./data)
+#  Reconstruir:  docker compose up -d --build   (tras cambiar código)
+# =====================================================================
+
+services:
+  panel:
+    # Usa el Dockerfile de este mismo directorio
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Mismo tag que el build manual: si ya existe la imagen, no la rehace
+    image: panel-redirecciones
+    container_name: panel
+    # Si la máquina se reinicia, el contenedor vuelve solo
+    restart: unless-stopped
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      # La contraseña NUNCA se hornea en la imagen. Compose la toma del
+      # archivo .env de este directorio (solo para reemplazar ${...} acá)
+      # y la inyecta al contenedor. Si no está definida, ni siquiera
+      # arranca y te dice qué falta.
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Falta ADMIN_PASSWORD en el archivo .env}
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      # OJO: NO uses `env_file: .env` acá. Eso metería el DATABASE_URL de
+      # desarrollo (file:./dev.db) y pisaría el del Dockerfile
+      # (file:/app/data/dev.db), rompiendo el volumen.
+
+    volumes:
+      # La base SQLite vive FUERA del contenedor: sobrevive a `down`,
+      # `rm` y `build`. Creala antes con: mkdir -p data
+      # (si la crea Docker sola queda como root y SQLite no puede escribir)
+      - ./data:/app/data

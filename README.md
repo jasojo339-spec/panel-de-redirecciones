@@ -105,6 +105,27 @@ curl -I http://localhost:3000
 > Si ya tenés `npm run dev` o `npm start` ocupando el 3000 en la máquina,
 > usá otro puerto: `-p 3200:3000` → http://localhost:3200
 
+### Con Docker Compose (más cómodo)
+
+El directorio incluye un `docker-compose.yml` que usa el mismo `Dockerfile`:
+
+```bash
+cd Web
+mkdir -p data                  # una sola vez: carpeta de la base
+
+docker compose up -d --build   # construye (si hace falta) y arranca
+docker compose logs -f         # ver logs
+docker compose restart         # reiniciar
+docker compose down            # parar/borrar el contenedor (los datos siguen en ./data)
+```
+
+- **La contraseña sale del `.env`** del directorio (`ADMIN_PASSWORD=...`); si
+  falta, compose ni arranca y te avisa en lugar de dejar la base sin proteger.
+- Mismo contenedor `panel`, mismo volumen `./data` y mismo tag de imagen que el
+  método manual: **pasar de `docker run` a compose no toca los datos**.
+- **Tras cambiar código**: `docker compose up -d --build` (la caché de capas hace
+  que solo recompile lo que cambió).
+
 Detalles importantes:
 
 - **Base de datos**: dentro de la imagen está en `/app/data/dev.db`
