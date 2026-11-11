@@ -1,51 +1,24 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
+# Dependencias y builds
+node_modules/
+.next/
+out/
+build/
+coverage/
 *.tsbuildinfo
 next-env.d.ts
 
-# base de datos SQLite (se crea con las migraciones)
-/prisma/dev.db
-/prisma/dev.db-journal
+# Base de datos SQLite (los datos no viajan en git)
+data/
+prisma/dev.db
+prisma/dev.db-journal
 
-# base de datos dentro de Docker (bind mount del contenedor)
-/data/
+# Secretos: NUNCA subir el .env real (la plantilla .env.example sí)
+.env
+.env.*
+!.env.example
 
-# respaldo del panel en HTML simple
-index-panel-v1.html.bak
+# Varios
+*.log
+.DS_Store
+.vscode/
+.idea/

@@ -121,6 +121,13 @@ docker compose down            # parar/borrar el contenedor (los datos siguen en
 
 - **La contraseña sale del `.env`** del directorio (`ADMIN_PASSWORD=...`); si
   falta, compose ni arranca y te avisa en lugar de dejar la base sin proteger.
+- **Red del host** (`network_mode: host`): el panel queda en el puerto 3000 del
+  servidor, igual que antes. Se usa la red del host en vez de mapear puertos
+  porque en CTs de Proxmox/LXC el mapeo dispara un bug de AppArmor + runc 1.3.x
+  que impide arrancar *cualquier* contenedor
+  (`open sysctl net.ipv4.ip_unprivileged_port_start: permission denied`;
+  ver opencontainers/runc#4968). Si algún día correrás `docker run` a mano en
+  esa CT, usá `--network host` en lugar de `-p 3000:3000`.
 - Mismo contenedor `panel`, mismo volumen `./data` y mismo tag de imagen que el
   método manual: **pasar de `docker run` a compose no toca los datos**.
 - **Tras cambiar código**: `docker compose up -d --build` (la caché de capas hace
