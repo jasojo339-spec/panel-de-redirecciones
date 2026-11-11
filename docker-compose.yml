@@ -29,7 +29,7 @@ services:
     # Con la red del host NO se crea esa red ni se toca el sysctl → arranca.
     # Verificado con: docker run --rm --network host hello-world ✓
     # El panel queda igual de accesible en http://IP:3000
-    network_mode: host
+
 
     environment:
       # La contraseña NUNCA se hornea en la imagen. Compose la toma del
