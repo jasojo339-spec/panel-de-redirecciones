@@ -17,8 +17,9 @@ services:
     image: panel-redirecciones
     container_name: panel
     # Si la máquina se reinicia, el contenedor vuelve solo
-    restart: unless-stopped
-
+    restart: always
+    ports:
+      - "3000:3000"
     # Sin `ports`: red directa del host (network_mode: host).
     # MOTIVO: en contenedores LXC/Proxmox, Docker inyecta el sysctl
     # net.ipv4.ip_unprivileged_port_start al crear una red nueva para el
